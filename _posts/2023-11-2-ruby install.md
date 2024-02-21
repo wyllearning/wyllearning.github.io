@@ -197,5 +197,3 @@ jekyll server
 ```
 jekyll server --detach
 ```
-
-​	访问 [http://47.109.31.160](http://47.109.31.160/) 即可进入 jekyll 博客主页
