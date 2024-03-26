@@ -106,11 +106,29 @@ gem update
 
 ##### rbenv安装
 
+安装gcc环境
+
 ```
 yum install gcc-c++
+```
+
+下载ruby
+
+```
 wget https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.2.tar.gz 
+```
+
+解压
+
+```
 tar -xvf ruby-3.1.2.tar.gz 
+```
+
+编译和构建
+
+```
 mkdir -p /usr/local/ruby 
+cd ruby-3.1.2
 ./configure --prefix=/usr/local/ruby 
 make && make install 
 ```
@@ -128,6 +146,9 @@ source /etc/profile
 ### 安装Jekyll和Bundler
 
 ```bash
+yum install gem
+gem sources --add https://mirrors.cloud.tencent.com/rubygems/ --remove https://rubygems.org/
+gem sources --add https://rubygems.org/ --remove https://mirrors.cloud.tencent.com/rubygems/
 gem install jekyll
 gem install bundler
 bundle install
@@ -167,6 +188,33 @@ server{
     listen 80;
     location / {
         proxy_pass http://127.0.0.1:4000;
+    }
+}
+
+# 同时映射多个网站
+server {
+    listen 80;
+    server_name makaixin.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:4000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 80;
+    server_name ai.makaixin.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:7860;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
